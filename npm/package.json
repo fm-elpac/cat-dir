@@ -1,0 +1,42 @@
+{
+  "name": "cat-dir",
+  "version": "0.1.0-a1",
+  "description": "Bundle directory into one plain-text file. (like tar, but you can `cat` it)",
+  "keywords": [
+    "bundle",
+    "cat",
+    "shell",
+    "linux",
+    "text",
+    "tar",
+    "zip"
+  ],
+  "files": [
+    "bin",
+    "doc",
+    "tool",
+    "cat-dir.sh"
+  ],
+
+  "type": "module",
+  "bin": "bin/cat-dir.js",
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fm-elpac/cat-dir.git",
+    "directory": "npm"
+  },
+  "bugs": {
+    "url": "https://github.com/fm-elpac/cat-dir/issues"
+  },
+  "license": "MIT",
+  "author": "secext2022",
+
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": "> 24.0"
+  }
+}

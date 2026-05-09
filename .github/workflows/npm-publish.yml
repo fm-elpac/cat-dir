@@ -1,0 +1,33 @@
+# 手动运行: 发布 npm 包
+name: npm publish (cat-dir)
+
+on:
+  workflow_dispatch:
+    inputs:
+
+permissions:
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+          registry-url: "https://registry.npmjs.org"
+
+      # build
+      - run: cp -r LICENSE doc tool cat-dir.sh npm/
+
+      # DEBUG
+      - run: find npm/
+
+      # 发布 npm
+      - run: cd npm && npm publish --tag beta
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
