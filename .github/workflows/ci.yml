@@ -23,7 +23,7 @@ jobs:
 
       # use cat-dir bundle cat-dir
       - run: git clone --depth=1 --single-branch https://github.com/fm-elpac/cat-dir.git cat-dir-src
-      - run: node bin/cat-dir.js cat-dir-src cat-dir-src.cat-dir.txt
+      - run: node npm/bin/cat-dir.js cat-dir-src cat-dir-src.cat-dir.txt
 
       - uses: actions/upload-artifact@v6
         with:
