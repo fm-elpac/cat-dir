@@ -1,6 +1,6 @@
 {
   "name": "cat-dir",
-  "version": "0.1.0-a1",
+  "version": "0.1.0-a2",
   "description": "Bundle directory into one plain-text file. (like tar, but you can `cat` it)",
   "keywords": [
     "bundle",
@@ -19,7 +19,9 @@
   ],
 
   "type": "module",
-  "bin": "bin/cat-dir.js",
+  "bin": {
+    "cat-dir": "bin/cat-dir.js"
+  },
 
   "repository": {
     "type": "git",

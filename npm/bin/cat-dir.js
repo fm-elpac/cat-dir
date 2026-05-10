@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // cat-dir.js
 import { randomBytes } from "node:crypto";
 import { createReadStream, createWriteStream } from "node:fs";
@@ -67,7 +68,7 @@ async function appendFileToOutput(outputStream, filePath, boundary) {
 async function main() {
   // 参数校验
   if (process.argv.length !== 4) {
-    console.error(`Usage: ${process.argv[1]} input_dir output.txt`);
+    console.error("Usage: cat-dir input_dir output.txt");
     process.exit(1);
   }
 
