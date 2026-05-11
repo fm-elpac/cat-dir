@@ -1,0 +1,26 @@
+# 手动运行: 发布 crates 包
+name: crates.io publish (cat-dir)
+
+on:
+  workflow_dispatch:
+    inputs:
+
+permissions:
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # doc
+      - run: cp -r LICENSE doc cat-dir-rs/
+
+      # DEBUG
+      - run: find cat-dir-rs
+
+      # 发布 npm
+      - run: cd cat-dir-rs && cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

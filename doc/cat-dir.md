@@ -20,7 +20,7 @@ exit 0
 > cat pmks-2/README.md
 TODO
 
---FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
+--FileBoundary-DqFD5ORwVLZsT2Usq4Clvha--
 ```
 
 ## 功能扩展
@@ -41,27 +41,28 @@ pmks-2/发布/README.md
 
 ```
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
-> sha256sum src/README.md
-8b51f72bbf8d852192e7a54a088cb18e1b5e654770231d5b7248b8fd0ead67ed  src/README.md
+> sha256sum
+8b51f72bbf8d852192e7a54a088cb18e1b5e654770231d5b7248b8fd0ead67ed  -
 > cat src/README.md
 666
+
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
 ```
 
-- (3) 符号链接 (草稿, 非最终设计):
+- (3) 符号链接:
 
 ```
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
-> ls -l src/current
-lrwxrwxrwx 1 a202602u24 a202602u24 9 May  9 10:32 src/current -> README.md
+> readlink .pmbs/latest
+2026/1778414735
 ```
 
 - (4) 压缩 (加密):
 
 ```
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
-> zstd src/README.md -o src/README.md.zst
-> cat src/README.md.zst/
+> zstd
+> cat src/README.md/
 
 省略 (虚拟文件)
 ```
@@ -130,8 +131,6 @@ lrwxrwxrwx 1 a202602u24 a202602u24 9 May  9 10:32 src/current -> README.md
   能够作为 元数据 的命令, 必须输出 固定格式 (不得输出 任意内容), 且输出 不会混淆
   (不会输出 `>` 开头的行).
 
-  TODO 具体 命令/参数/输出格式 待准确定义
-
 - (6) 关于 同一个文件 的各种 元数据, 应该和文件内容放在同一个 块 里, SHOULD NOT
   分散到多个 块 里面.
 
@@ -149,47 +148,74 @@ u0@localhost ~> cat test/
 cat: test/: Is a directory
 ```
 
-## 最初实现
+## 元数据 命令 定义
 
-仅供参考, 这个代码是 功能扩展 设计之前的版本, 未完整实现本规范.
+TODO
 
-- 文件 `cat-dir.sh`:
+### 文件结尾 元数据
 
 ```sh
-#!/bin/bash
-# cat-dir.sh INPUT_DIR OUTPUT_FILE_TXT
-
-if [ $# -ne 2 ]; then
-  echo "Usage: $0 input_dir output.txt"
-  exit 1
-fi
-
-DIR="$1"
-OUT="$2"
-
-if [ -f "${OUT}" ]; then
-  rm "${OUT}"
-fi
-
-# Content-Type: multipart/form-data; boundary=FileBoundary-XXXX
-BOUNDARY="--FileBoundary-$(head -c 32 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 23)"
-
-while IFS= read -r -d $'\0' file; do
-  echo "${BOUNDARY}" >> "${OUT}"
-  echo "> cat ${file}" >> "${OUT}"
-
-  cat "${file}" >> "${OUT}"
-
-  echo >> "${OUT}"
-done < <(find "${DIR}" -type f -print0)
-
-echo "${BOUNDARY}--" >> "${OUT}"
-
-echo "${BOUNDARY}"
-# ok
-
-# rsync -rvm --exclude='图' --include='*/' --include='*.md' --exclude='*' pmks-2 pmks-2-rsync/
+> cat-dir --print-meta
+> sha256sum
+HEX  -
+> cat /tmp/.CAT_DIR_FLIE/meta.json/
 ```
+
+注意: 可以插入 sha256 对 元数据内容 进行校验 (检查损坏).
+
+示例:
+
+```json
+{
+  "cat-dir --version": "0.1.0-b1",
+  "block": [
+    {
+      "t": "v",
+      "s": 0,
+      "b": 64,
+      "h": 25
+    },
+    {
+      "s": 64,
+      "b": 144,
+      "h": 100,
+      "p": "src/README.md",
+      "sha256": "8b51f72bbf8d852192e7a54a088cb18e1b5e654770231d5b7248b8fd0ead67ed",
+      "du -b": 4
+    }
+  ],
+  "boundary": "\n--FileBoundary-DqFD5ORwVLZsT2Usq4Clvha\n",
+  "t": "1778501114935"
+}
+```
+
+详细说明:
+
+- `cat-dir --version`: 生成此元数据的程序版本.
+
+- `block`: 块列表.
+
+- (block.) `t` (可选): 块类型. 默认为 文件 (含有一个 文件/虚拟文件). `v` 表示
+  `> cat-dir --version` 元数据块. `find` 表示 `> find` 块.
+
+- `s`: 块起始偏移 (字节), 从 cat-dir 打包文件的开头算起. 指向本块开始 boundary
+  的第 1 个字节 (`\n`).
+
+- `b`: 块长度 (字节). 不包括下一个 boundary.
+
+- `h`: 块元数据长度 (字节). 不包括 boundary.
+
+  所以一个块中 `> cat` 行后面的数据 长度 = b - h - BS. 其中 BS 是 boundary 长度.
+
+- `p` (可选): 文件路径 (如果这个块包含文件).
+
+- `sha256` (可选): 原始文件内容数据的校验.
+
+- `du -b` (可选): 原始文件长度 (字节).
+
+- `boundary`: 重复本文件的 boundary.
+
+- `t` (可选): 生成此元数据的 时间戳.
 
 ---
 

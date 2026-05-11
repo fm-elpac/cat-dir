@@ -1,4 +1,4 @@
-# 喵夹 (cat-dir) 目录 (文件树) 打包工具
+# cat-dir: Directory Tree Bundling Tool
 
 ![CI](https://github.com/fm-elpac/cat-dir/actions/workflows/ci.yml/badge.svg)
 
@@ -7,11 +7,9 @@ cat-dir: Bundle directory tree into one plain-text file. (like tar, but you can
 
 <https://github.com/fm-elpac/cat-dir>
 
-[English README](./README.en.md)
+## Usage
 
-## 用法
-
-比如有这样一个目录 (文件):
+For example, given a directory (files):
 
 ```sh
 mkdir -p src
@@ -19,14 +17,14 @@ echo "console.log(666)" > src/1.js
 echo "TODO" > src/README.md
 ```
 
-进行打包:
+Bundle it:
 
 ```sh
 > ./cat-dir.sh src src.txt
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
 ```
 
-然后获得文件 `src.txt`:
+Then you get the file `src.txt`:
 
 ```sh
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha
@@ -40,15 +38,15 @@ TODO
 --FileBoundary-DqFD5ORwVLZsT2Usq4Clvha--
 ```
 
-撒花 ~
+Hooray ~
 
 ---
 
 TODO
 
-## 文档
+## Documentation
 
-- 文件格式定义: `doc/cat-dir.md`
+- File format specification: `doc/cat-dir.en.md`
 
 TODO
 
