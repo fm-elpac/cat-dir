@@ -19,6 +19,20 @@ jobs:
 
       - run: deno fmt --check
 
+      # cat-dir-rs
+      - run: cd cat-dir-rs && cargo fmt --check
+
+      - run: cd cat-dir-rs && cargo build
+      - run: cd cat-dir-rs && cargo test
+      - run: cd cat-dir-rs && cargo doc
+
+      # release: x86_64-unknown-linux-gnu
+      - run: cd cat-dir-rs && cargo build --release
+      - uses: actions/upload-artifact@v6
+        with:
+          name: cat-dir-x86_64-linux-gnu
+          path: cat-dir-rs/target/release/cat-dir
+
       # TODO
 
       # use cat-dir bundle cat-dir

@@ -1,0 +1,35 @@
+[package]
+name = "cat-dir"
+version = "0.1.0-a1"
+edition = "2024"
+license = "MIT"
+
+authors = ["secext2022 <secext2022@outlook.com>"]
+description = "Bundle directory tree into one plain-text file. (like tar, but you can `cat` it)"
+repository = "https://github.com/fm-elpac/cat-dir"
+keywords = ["cat", "tree", "tar", "bundle", "file"]
+categories = ["command-line-utilities", "filesystem", "parser-implementations"]
+
+[[bin]]
+name = "cat-dir"
+path = "src/main.rs"
+
+[dependencies]
+pm-bin = "^0.1.2"
+
+log = "^0.4.29"
+serde = { version = "^1.0.228", features = ["derive"] }
+serde_json = "^1.0.149"
+
+base64 = "^0.22.1"
+getrandom = "^0.4.2"
+
+[features]
+default = []
+
+[build-dependencies]
+pm-bin = { version = "^0.1.2", features = ["build"] }
+
+[profile.release]
+strip = true
+lto = true
